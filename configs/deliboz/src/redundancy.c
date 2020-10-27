@@ -1,8 +1,7 @@
 /****************************************************************************
- * arch/arm/src/stm32/stm32_rtc.c
  *
- *   Copyright (C) 2011, 2015 Gregory Nutt. All rights reserved.
- *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *   Copyright (c) 2012-2016 PX4 Development Team. All rights reserved.
+ *         Author: Jukka Laitinen <jukka.laitinen@intel.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -14,7 +13,7 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 3. Neither the name NuttX nor the names of its contributors may be
+ * 3. Neither the name PX4 nor the names of its contributors may be
  *    used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -32,43 +31,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
-
-/****************************************************************************
- * Included Files
- ****************************************************************************/
-
-#include <nuttx/config.h>
-
-#include "chip.h"
-
-/****************************************************************************
- * Public Functions
- ****************************************************************************/
-
-/* This file is only a thin shell that includes the correct RTC implementation
- * for the selected STM32 family.  The correct file cannot be selected by
- * the make system because it needs the intelligence that only exists in
- * chip.h that can associate an STM32 part number with an STM32 family.
+/**
+ * @file redundancy.c
+ *
+ * redundant fc functions
  */
+#include <stdbool.h>
+#include "stm32.h"
+#include "board_config.h"
 
-/* The STM32 F1 has a simple battery-backed counter for its RTC and has a
- * separate block for the BKP registers.
- */
+void board_init_redundancy(void)
+{
+	/* Map uart4 tx to gpio input for redundant fc */
+	if (board_is_redundant_fc())
+		stm32_configgpio(GPIO_INPUT|GPIO_PORTA|GPIO_PIN0);
+}
 
-#if defined(CONFIG_STM32_STM32F10XX)
-#  include "stm32_rtcounter.c"
-
-/* The other families use a more traditional Realtime Clock/Calendar (RTCC) with
- * broken-out data/time in BCD format.  The backup registers are integrated into
- * the RTCC in these families.
- */
-
-#elif defined(CONFIG_STM32_STM32F20XX) || \
-      defined(CONFIG_STM32_STM32F30XX)
-#  include "stm32_rtcc.c"
-#elif defined(CONFIG_STM32_STM32L15XX)
-#  include "stm32l15xxx_rtcc.c"
-#elif defined(CONFIG_STM32_STM32F4XXX)
-#  include "stm32f40xxx_rtcc.c"
-#elif defined (CONFIG_STM32H7_STM32H7X3XX)
-#endif
+bool board_is_redundant_fc(void)
+{
+	/* In deliboz, the detect 1 pin selects NAV1 */
+	if(!stm32_gpioread(GPIO_REDUNDANCY_DETECT_1))
+		return false;
+	else
+		return true;
+}

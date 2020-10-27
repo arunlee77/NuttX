@@ -1,8 +1,13 @@
 /****************************************************************************
- * arch/arm/src/stm32/stm32_rtc.c
  *
- *   Copyright (C) 2011, 2015 Gregory Nutt. All rights reserved.
+ *   Copyright (C) 2011, 2015-2016 Gregory Nutt. All rights reserved.
  *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *
+ *   Copyright (C) 2016 Sebastien Lorquet. All rights reserved.
+ *   Author: Sebastien Lorquet <sebastien@lorquet.fr>
+ *
+ *   Copyright (C) 2020 Intel Corporation. All rights reserved.
+ *   Author: Petri Ahonen <petri.ahonen@intel.com>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -39,36 +44,88 @@
 
 #include <nuttx/config.h>
 
+#include <sys/types.h>
+#include <errno.h>
+#include <debug.h>
+
+#include <nuttx/board.h>
+#include <nuttx/timers/pwm.h>
+
+#include <arch/board/board.h>
+
 #include "chip.h"
+#include "arm_arch.h"
+#include "stm32_pwm.h"
+
+/****************************************************************************
+ * Pre-processor Definitions
+ ****************************************************************************/
+
+/* Configuration ************************************************************/
+
+/* PWM
+ *
+ * The STM3240G-Eval has no real on-board PWM devices, but the board can be
+ * configured to output a pulse train using variously unused pins on the board for
+ * PWM output (see board.h for details of pins).
+ */
+
+#ifdef CONFIG_PWM
 
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
 
-/* This file is only a thin shell that includes the correct RTC implementation
- * for the selected STM32 family.  The correct file cannot be selected by
- * the make system because it needs the intelligence that only exists in
- * chip.h that can associate an STM32 part number with an STM32 family.
- */
+/****************************************************************************
+ * Name: stm32h7_pwm_setup
+ *
+ * Description:
+ *   Initialize PWM and register the PWM device.
+ *
+ ****************************************************************************/
 
-/* The STM32 F1 has a simple battery-backed counter for its RTC and has a
- * separate block for the BKP registers.
- */
+int stm32h7_pwm_setup(void)
+{
+	static bool initialized = false;
+	struct pwm_lowerhalf_s *pwm;
+	int ret;
 
-#if defined(CONFIG_STM32_STM32F10XX)
-#  include "stm32_rtcounter.c"
+	/* Have we already initialized? */
 
-/* The other families use a more traditional Realtime Clock/Calendar (RTCC) with
- * broken-out data/time in BCD format.  The backup registers are integrated into
- * the RTCC in these families.
- */
+	if (!initialized) {
+		/* Call stm32h7_pwminitialize() to get an instance of the PWM interface */
 
-#elif defined(CONFIG_STM32_STM32F20XX) || \
-      defined(CONFIG_STM32_STM32F30XX)
-#  include "stm32_rtcc.c"
-#elif defined(CONFIG_STM32_STM32L15XX)
-#  include "stm32l15xxx_rtcc.c"
-#elif defined(CONFIG_STM32_STM32F4XXX)
-#  include "stm32f40xxx_rtcc.c"
-#elif defined (CONFIG_STM32H7_STM32H7X3XX)
+		/* PWM
+		 *
+		 */
+
+
+#if defined(CONFIG_STM32H7_TIM4_PWM)
+		pwm = stm32_pwminitialize(4);
+
+		if (!pwm) {
+			aerr("ERROR: Failed to get the STM32H7 PWM lower half\n");
+			return -ENODEV;
+		}
+
+		/* Register the PWM driver at "/dev/pwm4" */
+
+		ret = pwm_register("/dev/pwm4", pwm);
+
+		if (ret < 0) {
+			aerr("ERROR: pwm_register failed: %d\n", ret);
+			return ret;
+		}
+
 #endif
+
+
+		/* Now we are initialized */
+
+		initialized = true;
+	}
+
+	return OK;
+}
+
+#endif /* CONFIG_PWM */

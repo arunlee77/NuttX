@@ -1,8 +1,6 @@
 /****************************************************************************
- * arch/arm/src/stm32/stm32_rtc.c
  *
- *   Copyright (C) 2011, 2015 Gregory Nutt. All rights reserved.
- *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *   Copyright (C) 2017 PX4 Development Team. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -14,7 +12,7 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 3. Neither the name NuttX nor the names of its contributors may be
+ * 3. Neither the name PX4 nor the names of its contributors may be
  *    used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -33,42 +31,16 @@
  *
  ****************************************************************************/
 
-/****************************************************************************
- * Included Files
- ****************************************************************************/
-
-#include <nuttx/config.h>
-
-#include "chip.h"
-
-/****************************************************************************
- * Public Functions
- ****************************************************************************/
-
-/* This file is only a thin shell that includes the correct RTC implementation
- * for the selected STM32 family.  The correct file cannot be selected by
- * the make system because it needs the intelligence that only exists in
- * chip.h that can associate an STM32 part number with an STM32 family.
+/**
+ * @file px4fmu_i2c.c
+ *
+ * Board-specific I2C functions.
  */
 
-/* The STM32 F1 has a simple battery-backed counter for its RTC and has a
- * separate block for the BKP registers.
- */
+#include "board_config.h"
 
-#if defined(CONFIG_STM32_STM32F10XX)
-#  include "stm32_rtcounter.c"
-
-/* The other families use a more traditional Realtime Clock/Calendar (RTCC) with
- * broken-out data/time in BCD format.  The backup registers are integrated into
- * the RTCC in these families.
- */
-
-#elif defined(CONFIG_STM32_STM32F20XX) || \
-      defined(CONFIG_STM32_STM32F30XX)
-#  include "stm32_rtcc.c"
-#elif defined(CONFIG_STM32_STM32L15XX)
-#  include "stm32l15xxx_rtcc.c"
-#elif defined(CONFIG_STM32_STM32F4XXX)
-#  include "stm32f40xxx_rtcc.c"
-#elif defined (CONFIG_STM32H7_STM32H7X3XX)
-#endif
+__EXPORT bool px4_i2c_bus_external(int bus)
+{
+	return ((bus) != PX4_I2C_BUS_ONBOARD &&
+			(bus) != PX4_I2C_BUS_ONBOARD2);
+}

@@ -1043,6 +1043,15 @@ config ARCH_BOARD_NUCLEO_H743ZI
 	---help---
 		STMicro Nucleo H743ZI board based on the STMicro STM32H743ZI MCU.
 
+config ARCH_BOARD_DELIBOZ
+        bool "STM32H743 Deliboz"
+        depends on ARCH_CHIP_STM32H743ZI
+        select ARCH_HAVE_LEDS
+        select ARCH_HAVE_BUTTONS
+# TODO: select ARCH_HAVE_IRQBUTTONS
+        ---help---
+                Intel deliboz  board based on the STMicro STM32H743ZI MCU.
+
 config ARCH_BOARD_NUCLEO_L152RE
 	bool "STM32L152 Nucleo L152RE"
 	depends on ARCH_CHIP_STM32L152RE
@@ -1873,6 +1882,7 @@ config ARCH_BOARD
 	default "nucleo-f446re"            if ARCH_BOARD_NUCLEO_F446RE
 	default "nucleo-f410rb"            if ARCH_BOARD_NUCLEO_F410RB
 	default "nucleo-h743zi"            if ARCH_BOARD_NUCLEO_H743ZI
+	default "deliboz"	           if ARCH_BOARD_DELIBOZ
 	default "nucleo-l073rz"            if ARCH_BOARD_NUCLEO_L073RZ
 	default "nucleo-l152re"            if ARCH_BOARD_NUCLEO_L152RE
 	default "nucleo-l432kc"            if ARCH_BOARD_NUCLEO_L432KC
@@ -1974,10 +1984,11 @@ comment "Common Board Options"
 
 config ARCH_HAVE_LEDS
 	bool
+	default n
 
 config ARCH_LEDS
 	bool "Board LED Status support"
-	default y
+	default n
 	depends on ARCH_HAVE_LEDS
 	---help---
 		Use board LEDs to show NuttX execution status state. Unique to boards that have LEDs
@@ -2229,6 +2240,9 @@ source "configs/nucleo-f410rb/Kconfig"
 endif
 if ARCH_BOARD_NUCLEO_H743ZI
 source "configs/nucleo-h743zi/Kconfig"
+endif
+if ARCH_BOARD_DELIBOZ
+source "configs/deliboz/Kconfig"
 endif
 if ARCH_BOARD_NUCLEO_L073RZ
 source "configs/nucleo-l073rz/Kconfig"

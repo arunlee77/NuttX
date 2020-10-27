@@ -1,8 +1,10 @@
 /************************************************************************************
- * arch/arm/src/stm32h7/chip/stm32_pwr.h
+ * arch/arm/src/stm32h7/hardware/stm32_sdmmc.h
  *
- *   Copyright (C) 2018 Gregory Nutt. All rights reserved.
- *   Authors: Mateusz Szafoni <raiden00@railab.me>
+ *   Copyright (C) 2016, 2019 Gregory Nutt. All rights reserved.
+ *   Authors: Gregory Nutt <gnutt@nuttx.org>
+ *            David Sidrane <david_s5@nscdg.com>
+ *            Jukka Laitinen <jukka.laitinen@iki.fi>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -33,8 +35,8 @@
  *
  ************************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_STM32H7_CHIP_STM32_PWR_H
-#define __ARCH_ARM_SRC_STM32H7_CHIP_STM32_PWR_H
+#ifndef __ARCH_ARM_SRC_STM32H7_HARDWARE_STM32_SDMMC_H
+#define __ARCH_ARM_SRC_STM32H7_HARDWARE_STM32_SDMMC_H
 
 /************************************************************************************
  * Included Files
@@ -44,11 +46,11 @@
 #include "chip.h"
 
 #if defined(CONFIG_STM32H7_STM32H7X3XX)
-#  include "stm32h7x3xx_pwr.h"
+#  include "stm32h7x3xx_sdmmc.h"
 #elif defined(CONFIG_STM32H7_STM32H7X7XX)
-#  include "hardware/stm32h7x3xx_pwr.h"
+#  include "stm32h7x3xx_sdmmc.h"
 #else
 #  error "Unsupported STM32 H7 part"
 #endif
 
-#endif /* __ARCH_ARM_SRC_STM32H7_CHIP_STM32_PWR_H */
+#endif /* __ARCH_ARM_SRC_STM32H7_HARDWARE_STM32_SDMMC_H */

@@ -767,7 +767,8 @@
 #define RCC_APB1LRSTR_I2C1RST           (1 << 21)   /* RCC APB1LRSTR: I2C1RST */
 #define RCC_APB1LRSTR_I2C2RST           (1 << 22)   /* RCC APB1LRSTR: I2C2RST */
 #define RCC_APB1LRSTR_I2C3RST           (1 << 23)   /* RCC APB1LRSTR: I2C3RST */
-                                                    /* Bits 24-26: Reserved */
+#define RCC_APB1LRSTR_I2C4RST           (1 << 24)   /* RCC APB1LRSTR: I2C3RST */
+                                                    /* Bits 26: Reserved */
 #define RCC_APB1LRSTR_HDMICECRST        (1 << 27)   /* RCC APB1LRSTR: HDMICECRST */
                                                     /* Bit 28: Reserved */
 #define RCC_APB1LRSTR_DAC1RST           (1 << 29)   /* RCC APB1LRSTR: DAC1RST */
@@ -904,13 +905,15 @@
 #define RCC_APB1LENR_I2C1EN             (1 << 21) /* RCC APB1LENR: I2C1EN */
 #define RCC_APB1LENR_I2C2EN             (1 << 22) /* RCC APB1LENR: I2C2EN */
 #define RCC_APB1LENR_I2C3EN             (1 << 23) /* RCC APB1LENR: I2C3EN */
-                                                  /* Bits 24-25: Reserved */
+#define RCC_APB1LENR_I2C4EN             (1 << 23) /* RCC APB1LENR: I2C3EN */
+                                                  /* Bits 25: Reserved */
 #define RCC_APB1LENR_HDMICECEN          (1 << 27) /* RCC APB1LENR: HDMICECEN */
                                                   /* Bit 28: Reserved */
 #define RCC_APB1LENR_DAC1EN             (1 << 29) /* RCC APB1LENR: DAC1EN */
 #define RCC_APB1LENR_USART7EN           (1 << 30) /* RCC APB1LENR: USART7EN */
 #define RCC_APB1LENR_USART8EN           (1 << 31) /* RCC APB1LENR: USART8EN */
-
+#define RCC_APB1LENR_UART7EN            (1 << 30) /* RCC APB1LENR: UART7EN */
+#define RCC_APB1LENR_UART8EN            (1 << 31) /* RCC APB1LENR: UART8EN */
 /* APB1 H Peripheral Clock enable register */
 
                                                  /* Bit 0: Reserved */
@@ -1100,5 +1103,16 @@
 #define RCC_APB4LPENR_VREFLPEN          (1 << 15)      /* RCC APB4LPENR: VREFLPEN */
 #define RCC_APB4LPENR_RTCAPBLPEN        (1 << 16)      /* RCC APB4LPENR: RTCAPBLPEN */
 #define RCC_APB4LPENR_SAI4LPEN          (1 << 21)      /* RCC APB4LPENR: SAI4LPEN */
+
+#define RCC_BDCR_RTCSEL_SHIFT           (8)                          /* Bits 9:8: RTC clock source selection */
+#define RCC_BDCR_RTCSEL_MASK            (3 << RCC_BDCR_RTCSEL_SHIFT)
+#  define RCC_BDCR_RTCSEL_NOCLK         (0 << RCC_BDCR_RTCSEL_SHIFT) /* 00: No clock */
+#  define RCC_BDCR_RTCSEL_LSE           (1 << RCC_BDCR_RTCSEL_SHIFT) /* 01: LSE oscillator clock used as RTC clock */
+#  define RCC_BDCR_RTCSEL_LSI           (2 << RCC_BDCR_RTCSEL_SHIFT) /* 10: LSI oscillator clock used as RTC clock */
+#  define RCC_BDCR_RTCSEL_HSE           (3 << RCC_BDCR_RTCSEL_SHIFT) /* 11: HSE oscillator clock divided by 128 used as RTC clock */
+                                                                     /* Bits 10-15: Reserved */
+#define RCC_BDCR_RTCEN                  (1 << 15)                    /* Bit 15: RTC clock enable */
+#define RCC_BDCR_BDRST                  (1 << 16)                    /* Bit 16: Backup domain software reset */
+                                                                     /* Bits 17-31: Reserved */
 
 #endif /* __ARCH_ARM_SRC_STM32H7_CHIP_STM32H7X3XX_RCC_H */

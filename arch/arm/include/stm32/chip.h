@@ -2254,7 +2254,8 @@
 #  endif
 #  define STM32_NRNG                     1   /* Random number generator (RNG) */
 #  define STM32_NDCMI                    1   /* Digital camera interface (DCMI) */
-
+#elif defined(CONFIG_ARCH_CHIP_STM32H7)
+#  define STM32_NETHERNET              1   /* 100/100 Ethernet MAC */
 #else
 #  error "Unsupported STM32 chip"
 #endif

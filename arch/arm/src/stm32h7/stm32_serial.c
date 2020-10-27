@@ -294,7 +294,9 @@ static struct up_dev_s g_usart1priv =
     },
 
   .irq           = STM32_IRQ_USART1,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_USART1_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_USART1_PARITY,
   .bits          = CONFIG_USART1_BITS,
   .stopbits2     = CONFIG_USART1_2STOP,
@@ -348,7 +350,9 @@ static struct up_dev_s g_usart2priv =
     },
 
   .irq           = STM32_IRQ_USART2,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_USART2_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_USART2_PARITY,
   .bits          = CONFIG_USART2_BITS,
   .stopbits2     = CONFIG_USART2_2STOP,
@@ -402,7 +406,9 @@ static struct up_dev_s g_usart3priv =
     },
 
   .irq           = STM32_IRQ_USART3,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_USART3_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_USART3_PARITY,
   .bits          = CONFIG_USART3_BITS,
   .stopbits2     = CONFIG_USART3_2STOP,
@@ -456,7 +462,9 @@ static struct up_dev_s g_uart4priv =
     },
 
   .irq           = STM32_IRQ_UART4,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_UART4_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_UART4_PARITY,
   .bits          = CONFIG_UART4_BITS,
   .stopbits2     = CONFIG_UART4_2STOP,
@@ -514,7 +522,9 @@ static struct up_dev_s g_uart5priv =
     },
 
   .irq           = STM32_IRQ_UART5,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_UART5_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_UART5_PARITY,
   .bits          = CONFIG_UART5_BITS,
   .stopbits2     = CONFIG_UART5_2STOP,
@@ -572,7 +582,9 @@ static struct up_dev_s g_usart6priv =
     },
 
   .irq           = STM32_IRQ_USART6,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_USART6_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_USART6_PARITY,
   .bits          = CONFIG_USART6_BITS,
   .stopbits2     = CONFIG_USART6_2STOP,
@@ -626,7 +638,9 @@ static struct up_dev_s g_uart7priv =
     },
 
   .irq           = STM32_IRQ_UART7,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_UART7_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_UART7_PARITY,
   .bits          = CONFIG_UART7_BITS,
   .stopbits2     = CONFIG_UART7_2STOP,
@@ -680,7 +694,9 @@ static struct up_dev_s g_uart8priv =
     },
 
   .irq           = STM32_IRQ_UART8,
+#ifndef CONFIG_SERIAL_TERMIOS
   .rxftcfg       = CONFIG_USRT8_RXFIFO_THRES,
+#endif
   .parity        = CONFIG_UART8_PARITY,
   .bits          = CONFIG_UART8_BITS,
   .stopbits2     = CONFIG_UART8_2STOP,
@@ -1206,9 +1222,9 @@ static int up_setup(struct uart_dev_s *dev)
   regval &= ~(USART_CR3_CTSIE | USART_CR3_CTSE | USART_CR3_RTSE | USART_CR3_EIE);
 
   /* Set Rx FIFO threshold to the configured level */
-
+#ifndef CONFIG_SERIAL_TERMIOS
   regval |= USART_CR3_RXFTCFG(priv->rxftcfg);
-
+#endif
   up_serialout(priv, STM32_USART_CR3_OFFSET, regval);
 
   /* Configure the USART line format and speed. */

@@ -37,7 +37,6 @@
 # isn't one.
 
 HEAD_ASRC =
-
 # Common ARM and Cortex-M7 files
 
 CMN_UASRCS =
@@ -122,4 +121,19 @@ endif
 
 ifeq ($(CONFIG_USBHOST),y)
 CHIP_CSRCS += stm32_otghost.c
+endif
+
+ifeq ($(CONFIG_STM32H7_RTC),y)
+CHIP_CSRCS += stm32_rtc.c
+ifeq ($(CONFIG_RTC_ALARM),y)
+CHIP_CSRCS += stm32_exti_alarm.c
+endif
+endif
+
+ifeq ($(CONFIG_STM32H7_PWR),y)
+CHIP_CSRCS += stm32_pwr.c
+endif
+
+ifeq ($(CONFIG_STM32H7_SDMMC),y)
+CHIP_CSRCS += stm32_sdmmc.c
 endif

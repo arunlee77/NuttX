@@ -1,0 +1,10 @@
+mkdir /etc
+mkdir/etc/init.d
+echo "Nuttx Init script"
+sleep 5
+echo "setting up ethernet"
+ifconfig eth0 192.168.30.11 hw 02:4a:55:4b:4b:41
+ifup eth0
+sleep 5
+echo " I am done"
+sleep 5
